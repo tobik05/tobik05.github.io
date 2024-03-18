@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator Prawdopodobieństwa Kuponu</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        text-align: center;
+    }
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .input-group {
+        margin-bottom: 10px;
+    }
+    .result {
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+<h1>Kalkulator Prawdopodobieństwa Kuponu</h1>
+<div class="container">
+    <div class="input-group">
+        <label for="team1">Kurs drużyny 1:</label>
+        <input type="number" id="team1" step="0.01">
+    </div>
+    <div class="input-group">
+        <label for="draw">Kurs remisu:</label>
+        <input type="number" id="draw" step="0.01">
+    </div>
+    <div class="input-group">
+        <label for="team2">Kurs drużyny 2:</label>
+        <input type="number" id="team2" step="0.01">
+    </div>
+    <div class="input-group">
+        <label for="coupon">Kurs całego kuponu:</label>
+        <input type="number" id="coupon" step="0.01">
+    </div>
+    <button onclick="calculate()">Oblicz</button>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    function calculate() {
+        const team1 = parseFloat(document.getElementById('team1').value);
+        const draw = parseFloat(document.getElementById('draw').value);
+        const team2 = parseFloat(document.getElementById('team2').value);
+        const coupon = parseFloat(document.getElementById('coupon').value);
+        
+        let margin;
+        let probability_team1;
+        let probability_draw;
+        let probability_team2;
+        
+        if (!draw) {
+            margin = 1 - 1 / ((1 / team1) + (1 / team2));
+            probability_team1 = ((1 / team1) * 100).toFixed(2);
+            probability_team2 = ((1 / team2) * 100).toFixed(2);
+            probability_draw = 0;
+        } else {
+            margin = 1 - 1 / ((1 / team1) + (1 / draw) + (1 / team2));
+            probability_team1 = ((1 / team1) * 100).toFixed(2);
+            probability_draw = ((1 / draw) * 100).toFixed(2);
+            probability_team2 = ((1 / team2) * 100).toFixed(2);
+        }
+        
+        const probability_kuponu = (margin * 100).toFixed(2);
+        
+        document.getElementById('result').innerHTML = `
+            Prawdopodobieństwo wygranej drużyny 1: ${probability_team1}%<br>
+            Prawdopodobieństwo remisu: ${probability_draw}%<br>
+            Prawdopodobieństwo wygranej drużyny 2: ${probability_team2}%<br>
+            <hr>
+            Prawdopodobieństwo całego kuponu: ${probability_kuponu}%
+        `;
+    }
+</script>
+</body>
+</html>
